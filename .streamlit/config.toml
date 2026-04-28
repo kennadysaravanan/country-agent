@@ -1,0 +1,10 @@
+[server]
+# Don't show the dev "Made with Streamlit" footer — looks more polished
+headless = true
+
+[theme]
+base = "light"
+primaryColor = "#3b82f6"
+
+[browser]
+gatherUsageStats = false
