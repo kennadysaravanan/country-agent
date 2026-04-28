@@ -62,13 +62,17 @@ git push -u origin main
    - **Branch:** `main`
    - **Main file path:** `ui.py`
    - **App URL:** pick something like `country-agent` → `https://country-agent.streamlit.app`
-4. Click **Advanced settings** → **Secrets**, paste:
-   ```toml
-   GROQ_API_KEY = "gsk_your_actual_key_here"
-   ```
+4. Click **Advanced settings**:
+   - **Python version:** select **`3.11`** ⚠️ **This is critical.** Streamlit Cloud defaults to the newest Python (3.13/3.14), which doesn't have prebuilt wheels for some of our dependencies → build fails. The repo also includes a `runtime.txt` as backup, but the dropdown is what actually controls it.
+   - **Secrets:** paste:
+     ```toml
+     GROQ_API_KEY = "gsk_your_actual_key_here"
+     ```
 5. Click **Deploy**.
 
 First build takes 1–2 minutes. After that you'll have a public URL.
+
+> **If you already deployed and got a build error like `RequiredDependencyException: zlib` or `pyo3 / pydantic-core build failed`:** that's the Python-version issue. You need to **delete the app and redeploy** with Python 3.11 selected — Streamlit Cloud doesn't let you change Python version in place.
 
 ### 4. Done
 
@@ -95,8 +99,20 @@ Streamlit Cloud auto-redeploys on push. Watch it in the dashboard.
 
 ## Troubleshooting
 
+### Build fails: `RequiredDependencyException: zlib` / `pyo3-ffi` / `pydantic-core` won't build / "the configured Python interpreter version (3.14) is newer than PyO3's maximum supported version"
+
+**Cause:** Streamlit Cloud is using Python 3.13 or 3.14, but some of our pinned packages only have prebuilt wheels for Python ≤ 3.13. Pip falls back to compiling from source, which needs `zlib`/Rust toolchain that aren't available in the build environment.
+
+**Fix:**
+1. Delete the failing app (App dashboard → ⋮ → Delete).
+2. Redeploy from scratch.
+3. In **Advanced settings**, set **Python version → 3.11**.
+4. Re-add your secrets.
+
+The repo's `runtime.txt` (`python-3.11`) is included as a hint, but the dropdown setting is what actually controls Python version on Streamlit Cloud.
+
 ### "GROQ_API_KEY is not configured"
-You skipped step 3 → Secrets. Open the app → ⋮ menu → **Settings → Secrets** → paste the key → save.
+You skipped the Secrets step. Open the app → ⋮ menu → **Settings → Secrets** → paste the key → save.
 
 ### Build fails: "ModuleNotFoundError"
 Streamlit Cloud reads `requirements.txt` from the repo root. Make sure it was committed.
