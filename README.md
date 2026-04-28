@@ -2,13 +2,15 @@
 
 Production-grade LangGraph agent that answers questions about countries using the public [REST Countries API](https://restcountries.com/).
 
+> 🌐 **Live demo:** https://kennadysaravanan-country-agent-ui-bf6eym.streamlit.app/
+
 - **LLM:** Groq (`llama-3.3-70b-versatile`)
 - **Tools:** declared with `@mcp.tool` (FastMCP) and bound to the LLM as native tool calls
 - **Memory:** per-`session_id` in-memory dict (multi-user safe, thread-locked)
 - **UI:** Streamlit
 - **API:** FastAPI
 
-> 🚀 **Deploy this for free in 5 minutes** → see [`DEPLOY.md`](DEPLOY.md) (Streamlit Community Cloud, no card, public URL).
+> 🚀 **Deploy your own copy free in 5 minutes** → see [`DEPLOY.md`](DEPLOY.md) (Streamlit Community Cloud, no card, public URL).
 
 ---
 
